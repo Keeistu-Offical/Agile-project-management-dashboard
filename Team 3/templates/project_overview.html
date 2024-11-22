@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Overview - {{ project.ProjectName }}</title>
+    <link rel="stylesheet" href="/static/project_overview.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div id="header-content">
+            <a href="/" class="back-to-dashboard">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+
+            <!-- Project Overview Section -->
+            <h1 class="project-header">{{ project.ProjectName }} Overview</h1>
+
+            <div id="logo-section">
+                <a href="/">
+                    <img id="logo" src="{{ url_for('static', filename='profile-user.png') }}" alt="User Logo">
+                </a>
+                <div id="user-greeting"></div>
+            </div>
+        </div>
+    </header>
+    
+    <section id="project-manager" class="project-manager-section">
+        <p>Product Owner: <strong>{{ product_owner.Name }}</strong></p>
+    </section>
+
+    <!-- User Stories Table -->
+    <section id="user-stories">
+        <h2><i class="fas fa-tasks"></i> User Stories</h2>
+        <form action="{{ url_for('update_user_story', project_id=project.ProjectID) }}" method="POST">
+            <table id="userStoriesTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>User Story</th>
+                        <th>Status</th>
+                        <th>Assignee</th>
+                        <th>MOSCOW</th>
+                        <th>Sprint</th>
+                        <th>Story Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for story in user_stories %}
+                    <tr class="status-row" data-status="{{ story.Status }}">
+                        <td>{{ story.UserStory }}</td>
+                        <!-- Status Cell with Dropdown -->
+                        <td>
+                            <select name="status_{{ story.UserStoryID }}" class="status-dropdown">
+                                <option value="In Progress" {% if story.Status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                <option value="Completed" {% if story.Status == 'Completed' %}selected{% endif %}>Completed</option>
+                                <option value="Not Started" {% if story.Status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                <option value="On Hold" {% if story.Status == 'On Hold' %}selected{% endif %}>On Hold</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="assignee-dropdown" data-story-id="{{ story.UserStoryID }}">
+                                <option value="">Select Assignee</option>
+                                {% for user in users %}
+                                    <option value="{{ user.UserID }}" {% if story.Assignee == user.UserID %}selected{% endif %}>{{ user.UserName }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="moscow_{{ story.UserStoryID }}" class="moscow-dropdown">
+                                <option value="M" {% if story.Moscow == 'M' %}selected{% endif %}>Must Have</option>
+                                <option value="S" {% if story.Moscow == 'S' %}selected{% endif %}>Should Have</option>
+                                <option value="C" {% if story.Moscow == 'C' %}selected{% endif %}>Could Have</option>
+                                <option value="W" {% if story.Moscow == 'W' %}selected{% endif %}>Won't Have</option>
+                            </select>
+                        </td>
+                        <!-- Sprint Dropdown -->
+                        <td>
+                            <select name="sprint_{{ story.UserStoryID }}">
+                                {% for sprint in sprints %}
+                                <option value="{{ sprint.SprintID }}" {% if sprint.SprintID == story.SprintId %}selected{% endif %}>Sprint {{ sprint.SprintNo }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>{{ story.StoryPoints[0] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+                
+                
+            </table>
+        </form>
+    </section>
+    
+
+    <!-- Sprint Calendar Section -->
+    <section id="sprint-calendar">
+        <h2><i class="fas fa-calendar-alt"></i> Sprint Calendar</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sprint Number</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Days Remaining</th>
+                    <th>Velocity</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for sprint in sprints %}
+                <tr>
+                    <td>{{ sprint.SprintNo }}</td>
+                    <td>
+                        <input type="text" class="start-date" value="{{ sprint.StartDate }}" data-sprint-id="{{ sprint.SprintID }}">
+                    </td>
+                    <td>
+                        <input type="text" class="end-date" value="{{ sprint.EndDate }}" data-sprint-id="{{ sprint.SprintID }}">
+                    </td>
+                    <td class="days-remaining"> 
+                        {{ sprint.DaysRemaining }}
+                    </td>
+                    <td>{{ sprint.TotalStoryPoints }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Initialize Flatpickr for Start and End Date fields
+                    flatpickr(".start-date", {
+                        dateFormat: "Y-m-d",  // date format
+                        onChange: function(selectedDates, dateStr, instance) {
+                            const sprintId = instance.input.getAttribute('data-sprint-id');
+                            console.log(`Start Date for Sprint ${sprintId} selected: ${dateStr}`);
+                        }
+                    });
+
+                    flatpickr(".end-date", {
+                        dateFormat: "Y-m-d",  //date format
+                        onChange: function(selectedDates, dateStr, instance) {
+                            const sprintId = instance.input.getAttribute('data-sprint-id');
+                            console.log(`End Date for Sprint ${sprintId} selected: ${dateStr}`);
+                        }
+                    });
+                });
+            </script>
+
+        </table>
+    </section>
+
+    <div id="calendar-popup" class="theme-popup">
+        <input type="text" id="calendar-input" class="flatpickr" readonly>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.js"></script>
+   
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const htmlElement = document.documentElement;
+            const savedTheme = localStorage.getItem("theme") || "light";
+            htmlElement.setAttribute("data-theme", savedTheme);
+        });
+    </script>
+    
+
+    <script>
+        $(document).ready(function () {
+            // Initialize Flatpickr for the popup calendar
+            const calendar = flatpickr("#calendar-input", {
+                inline: true,
+                locale: "en",
+                defaultDate: "today", // Default to today
+            });
+    
+            // Function to highlight the hovered date
+            function highlightHoveredDate(dateStr) {
+                calendar.setDate(dateStr, true); // Update Flatpickr to highlight the date in the cell
+            }
+    
+            // Event handlers for showing and hiding the calendar popup
+            $(".date-cell").hover(
+                function () {
+                    const date = $(this).text().trim(); // Get the date text
+                    highlightHoveredDate(date); // Highlight the date on the calendar
+    
+                    // Position the calendar above the cell
+                    const offset = $(this).offset();
+                    $("#calendar-popup")
+                        .css({
+                            top: offset.top - $("#calendar-popup").outerHeight(), // 10px gap above the cell
+                            left: offset.left,
+                        })
+                        .show();
+                },
+                function () {
+                    $("#calendar-popup").hide(); // Hide the calendar when the mouse leaves
+                }
+            );
+        });
+    </script>
+    
+    <script>
+        $(document).ready(function () {
+        // Function to calculate days remaining
+        function calculateDaysRemaining(endDate) {
+            const today = new Date();
+            const end = new Date(endDate);
+            const timeDiff = end - today; // Difference in milliseconds
+            const daysRemaining = Math.floor(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
+            return daysRemaining;
+        }
+
+        // Event listener for changes to the end date
+        $(".end-date").on("change", function () {
+            const endDate = $(this).val(); // Get the new end date value
+            const row = $(this).closest("tr"); // Get the current row
+            const daysRemainingCell = row.find(".days-remaining"); // Find the Days Remaining cell
+
+            if (endDate) {
+                const daysRemaining = calculateDaysRemaining(endDate);
+                daysRemainingCell.text(daysRemaining); // Update the Days Remaining column
+                // Apply color coding based on remaining days
+                if (daysRemaining >= 0) {
+                    daysRemainingCell.css("color", "green"); // Positive values in green
+                } else {
+                    daysRemainingCell.css("color", "red"); // Negative values in red
+                }
+            }
+        });
+
+        // Initial calculation for all rows
+        $('table tbody tr').each(function () {
+            const endDate = $(this).find('.end-date').val();
+            if (endDate) {
+                const daysRemaining = calculateDaysRemaining(endDate);
+                const daysRemainingCell = $(this).find(".days-remaining");
+                daysRemainingCell.text(daysRemaining); // Update the Days Remaining column
+                // Apply color coding
+                if (daysRemaining >= 0) {
+                    daysRemainingCell.css("color", "green");
+                } else {
+                    daysRemainingCell.css("color", "red");
+                }
+            }
+        });
+    });
+
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to change row color based on the status
+            function updateRowColor(row) {
+                const status = row.querySelector('.status-dropdown').value.toLowerCase();
+                if (status === 'in progress') {
+                    row.style.backgroundColor = '#7dec81';
+                    row.style.color = '#037503';
+                } else if (status === 'completed') {
+                    row.style.backgroundColor = '#7bf0f0';
+                    row.style.color = '#10415e';
+                } else if (status === 'on hold') {
+                    row.style.backgroundColor = '#e7af5b';
+                    row.style.color = '#5c3d0e';
+                } else if (status === 'not started') {
+                    row.style.backgroundColor = '#f04f6a';
+                    row.style.color = '#5c131f';
+                } else {
+                    row.style.backgroundColor = ''; // Default
+                }
+            }
+            const rows = document.querySelectorAll('.status-row');
+            rows.forEach(function(row) {
+                updateRowColor(row); // Initial color setting on page load
+            });
+            const statusDropdowns = document.querySelectorAll('.status-dropdown');
+            statusDropdowns.forEach(function(dropdown) {
+                dropdown.addEventListener('change', function() {
+                    const row = dropdown.closest('tr'); // Get the row that the dropdown is in
+                    updateRowColor(row); // Update row color when dropdown value changes
+                });
+            });
+        });
+    </script>
+</body>
+</html>
