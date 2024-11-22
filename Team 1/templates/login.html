@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    
+</head>
+<body>
+   
+ <style>
+     {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+     }
+    
+    /* Center the box in the middle of the screen */
+    body, html {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #D9D9D9;
+     }
+    
+    /* Box styling */
+    .login-box {
+        width: 503px;
+        height: 450px;
+        padding: 20px;
+        padding-top: 60px; 
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 2px solid #333333;
+        text-align: center;
+        position: relative;
+     }
+    
+    /* Logo container styling */
+    .logo-container {
+        position: absolute;
+        top: -60px; 
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px;
+        border-radius: 50%;
+        
+    }
+    
+    /* Logo styling */
+    .login-logo {
+        width: 100px;
+        height: 100px;
+    }
+    
+    /* Heading */
+    .login-box h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    /* Label styling */
+    .login-box label {
+        text-align: left;
+        display: block;
+        font-weight: bold;
+        margin: 10px 0 5px;
+        margin-left: 70px;
+        color: #333;
+    }
+    
+    /* Input field styling */
+    .login-box input[type="text"],
+    .login-box input[type="password"] {
+        width: 70%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+    }
+    
+    /* Forgot Password link styling */
+    .forgot-password {
+        display: block;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        margin-right: 75px;
+        text-align: right;
+        color: #007bff;
+        font-size: 14px;
+        text-decoration: none;
+    }
+    
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+    
+    /* Button styling */
+    .login-box button {
+        width: 50%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+    
+    .login-box button:hover {
+        background-color: #0056b3;
+    }
+    
+    /* Signup text styling */
+    .signup-text {
+        margin-top: 15px;
+        font-size: 14px;
+        color: #333;
+    }
+    
+    .signup-link {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    
+    .signup-link:hover {
+        text-decoration: underline;
+    }
+    
+    /* Responsive styling */
+    @media (max-width: 400px) {
+        .login-box {
+            width: 90%;
+        }
+    }
+    .error-message {
+        color: #dc3545; /* Red for error */
+        margin: 10px 0;
+        font-size: 0.9rem;
+    }  
+ </style>      
+
+    <div class="login-box">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo" class="login-logo">
+        </div>
+        <h1>Login</h1>
+        
+        {% if error %} 
+
+        <div class="error-message">{{ error }}</div> 
+
+        {% endif %}
+
+        <form method="POST" action="/login">
+            <label for="username">User Name</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+            
+            <div class="forgot-password-container">
+                <a href="{{ url_for('forgotpassword') }}" class="forgot-password">Forgot Password?</a>
+            </div>
+
+            <button type="submit">Login</button>
+            
+            <p class="signup-text">
+                Don't have an account? <a href="#" class="signup-link">Signup</a>
+            </p>
+        </form>
+    </div>
+</body>
+
+</html>
