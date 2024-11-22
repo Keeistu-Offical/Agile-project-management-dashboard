@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User Role</title>
+</head>
+<body>
+    <h1>Add User Role</h1>
+    <form method="POST" action="{{ url_for('add_user_role') }}">
+        <!-- User Dropdown -->
+
+        <div>
+            <label for="user_id">User:</label>
+            <select id="user_id" name="user_id" required>
+                {% for user in users %}
+                    <option value="{{ user.UserID }}">{{ user.UserName }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+
+        <!-- Project Dropdown -->
+        <div>
+            <label for="project_id">Project:</label>
+            <select id="project_id" name="project_id" required>
+                {% for project in projects %}
+                    <option value="{{ project.ProjectID }}">{{ project.ProjectName }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Role Dropdown -->
+        <div>
+            <label for="role_name">Role Name:</label>
+            <input type="text" id="role_name" name="role_name" placeholder="Enter role name" required>
+        </div>
+        
+
+        <!-- Submit Button -->
+        <button type="submit">Add Role</button>
+    </form>
+
+    <!-- Anchor Tag for Navigation -->
+    <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User Story</title>
+</head>
+
+<body>
+    <h1>Add User Story</h1>
+    <form action="{{ url_for('add_user_story') }}" method="POST">
+        <!-- Project Dropdown -->
+        <label for="project_id">Project:</label>
+        <select id="project_id" name="project_id" required>
+            <option value="" disabled selected>Select a Project</option>
+            {% for project in projects %}
+            <option value="{{ project.ProjectID }}">{{ project.ProjectName }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <!-- Sprint Dropdown -->
+        <label for="sprint_id">Sprint:</label>
+        <select id="sprint_id" name="sprint_id" required>
+            <option value="" disabled selected>Select a Sprint</option>
+            {% for sprint in sprints %}
+            <option value="{{ sprint.SprintID }}">Sprint {{ sprint.SprintNo }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <!-- User Story -->
+        <label for="user_story">User Story:</label>
+        <textarea id="user_story" name="user_story" rows="4" required></textarea><br><br>
+
+        <!-- MoSCoW Prioritization -->
+        <label for="moscow">MoSCoW Prioritization:</label>
+        <select id="moscow" name="moscow" required>
+            <option value="" disabled selected>Select Priority</option>
+            <option value="Must">Must</option>
+            <option value="Should">Should</option>
+            <option value="Could">Could</option>
+            <option value="Won't">Won't</option>
+        </select><br><br>
+
+        <!-- Assignee Dropdown -->
+        <label for="assignee">Assignee:</label>
+        <select id="assignee" name="assignee" required>
+            <option value="" disabled selected>Select a User</option>
+            {% for user in users %}
+            <option value="{{ user.UserID }}">{{ user.UserName }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <!-- Status Dropdown -->
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+            <option value="" disabled selected>Select Status</option>
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Blocked">Blocked</option>
+        </select><br><br>
+
+        <!-- Story Points -->
+        <label for="story_points">Story Points:</label>
+        <input type="number" id="story_points" name="story_points" min="1" required><br><br>
+
+        <!-- Submit Button -->
+        <input type="submit" value="Add User Story">
+    </form>
+
+    <br>
+    <a href="{{ url_for('home') }}">Go back to home</a>
+</body>
+
+</html>

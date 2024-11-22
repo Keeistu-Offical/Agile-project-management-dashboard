@@ -1,0 +1,61 @@
+<!-- templates/add_project.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Project</title>
+</head>
+
+<body>
+    <h1>Add New Project</h1>
+
+
+    <!-- Project Form -->
+    <form action="{{ url_for('add_project') }}" method="POST">
+        <div>
+            <label for="project_name">Project Name:</label>
+            <input type="text" id="project_name" name="project_name" required>
+        </div>
+        <div>
+            <label for="product_owner_id">Product Owner:</label>
+            <select id="product_owner_id" name="product_owner_id" required>
+                <option value="" disabled selected>Select Product Owner</option>
+                {% for owner in product_owners %}
+                <option value="{{ owner.ProductOwnerID }}">{{ owner.Name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date" required>
+        </div>
+        <div>
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date" name="end_date">
+        </div>
+        <div>
+            <label for="revised_end_date">Revised End Date:</label>
+            <input type="date" id="revised_end_date" name="revised_end_date">
+        </div>
+        <div>
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+                <option value="" disabled selected>Select</option>
+                <option value="Hold">Hold</option>
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </div>
+        
+        <div>
+            <button type="submit">Add Project</button>
+        </div>
+    </form>
+
+    <br>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+
+</html>

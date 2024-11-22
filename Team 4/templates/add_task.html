@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Task</title>
+</head>
+
+<body>
+    <h1>Add Task</h1>
+    <form action="{{ url_for('add_task') }}" method="POST">
+        <!-- User Story Dropdown -->
+        <label for="user_story_id">User Story:</label>
+        <select id="user_story_id" name="user_story_id" required>
+            <option value="" disabled selected>Select a User Story</option>
+            {% for story in user_stories %}
+            <option value="{{ story.UserStoriesID }}">{{ story.UserStory }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <!-- Task Name -->
+        <label for="task_name">Task Name:</label>
+        <input type="text" id="task_name" name="task_name" required><br><br>
+
+        <!-- Assignee Dropdown -->
+        <label for="assignee_user_id">Assignee:</label>
+        <select id="assignee_user_id" name="assignee_user_id" required>
+            <option value="" disabled selected>Select an Assignee</option>
+            {% for user in users %}
+            <option value="{{ user.UserID }}">{{ user.UserName }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <!-- Task Status Dropdown -->
+        <label for="task_status">Task Status:</label>
+        <select id="task_status" name="task_status" required>
+            <option value="" disabled selected>Select Task Status</option>
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Blocked">Blocked</option>
+        </select><br><br>
+
+        <!-- Submit Button -->
+        <input type="submit" value="Add Task">
+    </form>
+
+    <br>
+    <a href="{{ url_for('home') }}">Go back to home</a>
+</body>
+
+</html>

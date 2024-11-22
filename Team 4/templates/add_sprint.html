@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Sprint</title>
+</head>
+
+<body>
+    <h1>Add Sprint</h1>
+    <form action="{{ url_for('add_sprint') }}" method="POST">
+        <div>
+            <label for="project_id">Project:</label>
+            <select id="project_id" name="project_id" required>
+                <option value="" disabled selected>Select a Project</option>
+                {% for project in projects %}
+                    <option value="{{ project.ProjectID }}">{{ project.ProjectName }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="scrum_master_id">Scrum Master:</label>
+            <select id="scrum_master_id" name="scrum_master_id" required>
+                <option value="" disabled selected>Select a Scrum Master</option>
+                {% for scrum_master in scrum_masters %}
+                    <option value="{{ scrum_master.ScrumMasterID }}">{{ scrum_master.Email }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="sprint_no">Sprint Number:</label>
+            <input type="number" id="sprint_no" name="sprint_no" required>
+        </div>
+
+        <div>
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date" required>
+        </div>
+
+        <div>
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date" name="end_date">
+        </div>
+
+        <div>
+            <label for="sprint_status">Status:</label>
+            <select id="sprint_status" name="sprint_status" required>
+                <option value="" disabled selected>Select Status</option>
+                <option value="Hold">Hold</option>
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </div>
+
+        <div>
+            <button type="submit">Add Sprint</button>
+        </div>
+    </form>
+</body>
+
+</html>
+
